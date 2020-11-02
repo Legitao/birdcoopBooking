@@ -1,0 +1,5 @@
+.vscode/
+*.env
+*.log
+logs/
+playground.py
