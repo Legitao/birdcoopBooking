@@ -1,0 +1,3 @@
+how to schedule job:
+    1. In mac system preference, schedule wake up at 11:55 am
+    2. crontab -e
