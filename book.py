@@ -31,11 +31,9 @@ def getBookDate2():
     return (dateStr, weekDay)
 
 
-def visitSite(url):
-    print('Start visiting')
+def launchBrowser():
     executable_path = {'executable_path': '/usr/local/bin/geckodriver'}
     browser = Browser(**executable_path)  # defaults to firefox
-    browser.visit(url)
     return browser
 
 
@@ -112,24 +110,32 @@ def bookSession(browser, dateStr, weekDay):
 
 
 def main():
-    load_dotenv()
-    dateStr, weekDay = getBookDate2()
-    sys.stdout = open(f"logs/{dateStr.replace('/', '-')}.txt", "a+")
+    try:
+        load_dotenv()
+        dateStr, weekDay = getBookDate2()
+        sys.stdout = open(f"logs/{dateStr.replace('/', '-')}.txt", "a+")
 
-    # visit perfectmind site
-    browser = visitSite(os.getenv('URL'))
-    loginCWL(browser)
+        # visit perfectmind site
+        browser = launchBrowser()
+        print('Start visiting booking stie...')
+        browser.visit(os.getenv('URL'))
+        loginCWL(browser)
 
-    # wait until 12pm
-    now = datetime.datetime.now().time()  # time object
-    currHour = str(now).split(':')[0]
-    while (currHour != '12'):
+        # wait until 12pm
         now = datetime.datetime.now().time()  # time object
         currHour = str(now).split(':')[0]
+        while (currHour != '12'):
+            now = datetime.datetime.now().time()  # time object
+            currHour = str(now).split(':')[0]
 
-    bookSession(browser, dateStr, weekDay)
-    browser.quit()
-    sys.stdout.close()
+        bookSession(browser, dateStr, weekDay)
+    except Exception as e:
+        print('Error occurs')
+        print(e)
+        print()
+    finally:
+        browser.quit()
+        sys.stdout.close()
 
 
 if __name__ == "__main__":
