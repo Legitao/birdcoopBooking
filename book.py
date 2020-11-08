@@ -53,6 +53,7 @@ def loginCWL(browser):
 def bookSession(browser, dateStr, weekDay):
     while True:
         browser.fill('jump-to-date', dateStr + '\n')
+        sleep(3)
         print('reading session list...')
         session_list = browser.find_by_css('.bm-class-row')
         if (int(weekDay) < 5):
@@ -68,17 +69,17 @@ def bookSession(browser, dateStr, weekDay):
             # skip first session in the morning, too early
             if idx == 0:
                 continue
-            # session full or haven't open
-            if session.find_by_css('.bm-group-item-link div label').html == 'More Info':
+            # can't register because session full or haven't open
+            if session.find_by_css('.bm-group-item-link div label').html != 'Register Now':
                 # find_by_text is too slow
                 # if not session.find_by_text('Register Now'):
                 continue
             # session havs spot left, can register
-            registered = True
             sessionTime = session.find_by_css(
                 '.bm-group-item-desc .anchor:first-child span').value
             print(f"booking session {sessionTime}......")
             session.find_by_css('.bm-class-details').click()
+            registered = True
             break
 
         if registered:
@@ -106,6 +107,7 @@ def bookSession(browser, dateStr, weekDay):
     # must switch context to the iframe to get the element
     with browser.get_iframe(0) as iframe:
         iframe.find_by_css('.process-now').click()
+        sleep(10)
         print('book success')
 
 
