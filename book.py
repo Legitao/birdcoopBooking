@@ -6,25 +6,8 @@ import os
 import sys
 
 
-def suffix(d):
-    return 'th' if 11 <= d <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(d % 10, 'th')
-
-
-def custom_strftime(format, t):
-    return t.strftime(format).replace('{S}', str(t.day) + suffix(t.day))
-
-
-# Nov 3rd format
-def getBookDate1():
-    # two days later
-    dateObj = datetime.date.today() + datetime.timedelta(days=2)
-    dateStr = custom_strftime('%b {S}', dateObj)
-    weekDay = dateObj.strftime('%w')
-    return (dateStr, weekDay)
-
-
-# 03/11/2020 format
-def getBookDate2():
+# dd/mm/yyyy format
+def getBookDate():
     dateObj = datetime.date.today() + datetime.timedelta(days=2)
     dateStr = dateObj.strftime('%d/%m/%Y')
     weekDay = dateObj.strftime('%w')
@@ -114,7 +97,7 @@ def bookSession(browser, dateStr, weekDay):
 def main():
     try:
         load_dotenv()
-        dateStr, weekDay = getBookDate2()
+        dateStr, weekDay = getBookDate()
         sys.stdout = open(f"logs/{dateStr.replace('/', '-')}.txt", "a+")
 
         # visit perfectmind site
