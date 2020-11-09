@@ -33,6 +33,14 @@ def loginCWL(browser):
         pass
 
 
+def waitUntil12PM():
+    now = datetime.datetime.now().time()  # time object
+    currHour = str(now).split(':')[0]
+    while (currHour != '12'):
+        now = datetime.datetime.now().time()  # time object
+        currHour = str(now).split(':')[0]
+
+
 def bookSession(browser, dateStr, weekDay):
     while True:
         browser.fill('jump-to-date', dateStr + '\n')
@@ -99,20 +107,12 @@ def main():
         load_dotenv()
         dateStr, weekDay = getBookDate()
         sys.stdout = open(f"logs/{dateStr.replace('/', '-')}.txt", "a+")
-
         # visit perfectmind site
         browser = launchBrowser()
         print('Start visiting booking stie...')
         browser.visit(os.getenv('URL'))
         loginCWL(browser)
-
-        # wait until 12pm
-        now = datetime.datetime.now().time()  # time object
-        currHour = str(now).split(':')[0]
-        while (currHour != '12'):
-            now = datetime.datetime.now().time()  # time object
-            currHour = str(now).split(':')[0]
-
+        # waitUntil12PM()
         bookSession(browser, dateStr, weekDay)
     except Exception as e:
         print('Error occurs')
